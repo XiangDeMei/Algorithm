@@ -23,6 +23,10 @@ struct Lline{Lpoint p; Ldir dir;}; //直线  点+方向向量
 struct Lrad{Lpoint Sp; Ldir dir;}; //射线
 struct Lround{Lpoint co; double r;};//圆
 
+int Euqal_Point(Lpoint p1,Lpoint p2)//判断两点是否相等  精度 
+{
+	return((fabs(p1.x-p2.x)<EP)&&(fabs(p1.y-p2.y)<EP));
+}
 double pTop(Lpoint p1,Lpoint p2)//两点之间距离 
 {
 	return (sqrt((p1.x-p2.x)*(p1.x-p2.x) + (p1.y-p2.y)*(p1.y-p2.y)));
@@ -36,7 +40,7 @@ double pTop(Lpoint p1,Lpoint p2)//两点之间距离
 比如确定p0p1和p1p2在p1处是左转还是右转，只要求
 (p2-p0)*(p1-p0)，若<0则左转，>0则右转，=0则共线
 */
-double xmulti(Lpoint p1,Lpoint p2,Lpoint p0)
+double xmulti(Lpoint p1,Lpoint p2,Lpoint p0)//叉积 
 {
 	return	((p1.x-p0.x)*(p2.y-p0.y) - (p2.x-p0.x)*(p1.y-p0.y));
 }
