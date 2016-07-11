@@ -10,3 +10,19 @@ int gcd(int a,int b){
 int lcm(int a,int b){
 	return a*b/gcd(a,b);
 }
+//快速gcd
+int kgcd(int a, int b){
+	if (a == 0) return b;
+	if (b == 0) return a;	
+	if (!(a & 1) && !(b & 1)) return kgcd(a>>1, b>>1) << 1;
+	else if (!(b & 1)) return kgcd(a, b>>1);
+	else if (!(a & 1)) return kgcd(a>>1, b);
+	else return kgcd(abs(a - b), min(a, b));
+}
+//扩展 gcd 求x, y使得gcd(a, b) = a * x + b * y;
+int extgcd(int a, int b, int & x, int & y){
+	if (b == 0) { x=1; y=0; return a; }
+	int d = extgcd(b, a % b, x, y);	
+	int t = x; x = y; y = t - a / b * y;
+	return d;
+}
