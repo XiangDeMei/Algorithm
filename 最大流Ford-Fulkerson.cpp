@@ -10,7 +10,7 @@ bool used[MAX_V];      //dfs中用到的访问标记
 //向图中增加一条s到t容量为cap的边 
 void add_edge(int from, int to, int cap){
 	G[from].push_back((edge){to, cap, G[to].size()});
-	G[to].push_back((edge){from, cap, G[from].size()});
+	G[to].push_back((edge){from, 0, G[from].size() - 1});
 }
 //dfs寻找增广路 
 int dfs(int v, int t, int f){
