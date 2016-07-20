@@ -1,3 +1,11 @@
+
+//求反正弦, arg∈[-1, 1], 返回值∈[-pi/2, +pi/2] 
+double asin( double arg ); 
+//求正弦, arg为弧度, 弧度=角度*Pi/180.0, 返回值∈[-1, 1] 
+double sin( double arg ); 
+//求e的arg次方 
+double exp( double arg );
+
 /*取模运算*/
 (a + b) % p = (a % p + b % p) % p 
 (a * b) % p = (a % p * b % p) % p 
@@ -8,6 +16,7 @@
 */
 int dig(int x) { return (x + 8) % 9 + 1; }
 //最大公约数，最小公倍数
+//__gcd(a,b)  GNU库函数神器好吧  
 int gcd(int a,int b){
 	return b==0?a:gcd(b,a%b);
 }

@@ -56,6 +56,46 @@ double pTol(Lpoint a,Lline ln)//点到直线距离
 	format(ln, A, B, C);
 	return(fabs(A * a.x + B * a.y + C) / sqrt( A * A + B * B));
 }
+
+/*
+	Graham 求凸包 O(N * logN)
+	int graham(point pnt[], int n, point res[])
+	pnt[]传入点集，顺序无要求，n为点的个数
+	res[]用来保存凸包中的点,逆时针排序，大小要比pnt[]大1，可能所有点都属于凸包
+	函数返回凸包中点的个数,个数可能为n,所以res[]需要定义n+1大小
+*/
+
+struct point{double x,y;} p[N],res[N+1];//res[]用来保存凸包中的点
+
+bool mult(point sp, point ep, point op){
+	return (sp.x-op.x)*(ep.y-op.y)>=(ep.x - op.x)*(sp.y-op.y);
+}
+bool operator < (const point &l, const point &r){
+	return l.y < r.y || (l.y == r.y && l.x < r.x);
+}
+int graham(point pnt[], int n, point res[]){
+	int i, len, k = 0, top = 1;
+	sort(pnt, pnt + n);
+	if (n == 0) 	return 0; 
+	res[0] = pnt[0];
+	if (n == 1) 	return 1; 
+	res[1] = pnt[1];
+	if (n == 2) 	return 2; 
+	res[2] = pnt[2];
+	for (i = 2; i < n; i++) {
+		while (top && mult(pnt[i], res[top], res[top-1]))
+			top--;
+		res[++top] = pnt[i];
+	}
+	len = top; 
+	res[++top] = pnt[n - 2];
+	for (i = n - 3; i >= 0; i--) {
+		while (top!=len && mult(pnt[i], res[top],res[top-1])) 
+			top--;
+		res[++top] = pnt[i];
+	}
+	return top; // 返回凸包中点的个数
+}
 int main()
 {
 	Lpoint a,b,c;
