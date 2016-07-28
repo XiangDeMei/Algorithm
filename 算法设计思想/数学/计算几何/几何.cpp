@@ -27,7 +27,7 @@ int Euqal_Point(Lpoint p1,Lpoint p2)//判断两点是否相等  精度
 {
 	return((fabs(p1.x-p2.x)<EP)&&(fabs(p1.y-p2.y)<EP));
 }
-double pTop(Lpoint p1,Lpoint p2)//两点之间距离 
+double dis_p2p(Lpoint p1,Lpoint p2)//两点之间距离 
 {
 	return (sqrt((p1.x-p2.x)*(p1.x-p2.x) + (p1.y-p2.y)*(p1.y-p2.y)));
 }
@@ -50,7 +50,7 @@ void format(Lline ln,double& A,double& B,double& C)//计算直线的一般式 Ax
 	B=-ln.dir.dx;
 	C=ln.p.y*ln.dir.dx-ln.p.x*ln.dir.dy;
 }
-double pTol(Lpoint a,Lline ln)//点到直线距离
+double dis_p2l(Lpoint a,Lline ln)//点到直线距离
 {
 	double A, B, C;
 	format(ln, A, B, C);
@@ -64,7 +64,7 @@ double pTol(Lpoint a,Lline ln)//点到直线距离
 	res[]用来保存凸包中的点,逆时针排序，大小要比pnt[]大1，可能所有点都属于凸包
 	函数返回凸包中点的个数,个数可能为n,所以res[]需要定义n+1大小
 */
-
+#define N 1000 
 struct point{double x,y;} p[N],res[N+1];//res[]用来保存凸包中的点
 
 bool mult(point sp, point ep, point op){
@@ -96,6 +96,58 @@ int graham(point pnt[], int n, point res[]){
 	}
 	return top; // 返回凸包中点的个数
 }
+
+
+
+/*
+	三维
+*/ 
+struct Point{ 
+	double x, y, z; 
+	Point(double _x, double _y, double _z) : x(_x), y(_y), z(_z){}
+	Point operator-(const Point &t){
+        return Point( x - t.x, y - t.y, z - t.z );
+    }
+    Point operator+(const Point &t){
+        return Point( x + t.x, y + t.y, z + t.z );
+    }
+    Point operator*(const double t){
+        return Point( x * t, y * t, z * t );
+    }
+}; 
+struct Vec3{ 
+	double x, y, z; 
+	Vec3(double _x, double _y, double _z) : x(_x), y(_y), z(_z){}
+}; 
+struct Line3{
+    Point a,b;
+    Line3(Point _a, Point _b) : a(_a), b(_b){}
+};
+struct Plane3{
+    Point a,b,c;
+    Plane3(Point _a, Point _b, Point _c) : a(_a), b(_b), c(_c){}
+};
+//已知3点坐标，求平面ax+by+cz+d=0; 
+void get_panel(Point p1, Point p2, Point p3, double &a, double &b, double &c, double &d){
+	a = ( (p2.y-p1.y)*(p3.z-p1.z)-(p2.z-p1.z)*(p3.y-p1.y) );
+    b = ( (p2.z-p1.z)*(p3.x-p1.x)-(p2.x-p1.x)*(p3.z-p1.z) );
+    c = ( (p2.x-p1.x)*(p3.y-p1.y)-(p2.y-p1.y)*(p3.x-p1.x) );
+    d = ( 0 - (a * p1.x + b * p1.y + c * p1.z) );
+}
+//点到平面距离 
+double dis_pt2panel(Point pt, double a, double b, double c, double d){
+	return fabs( a * pt.x + b * pt.y + c * pt.z + d) / sqrt(a * a + b * b + c * c);
+}
+// 已知三点坐标，求法向量
+Vec3 get_vec(Point p1,Point p2,Point p3)
+{
+	double a, b, c;
+ 	a = ( (p2.y-p1.y)*(p3.z-p1.z)-(p2.z-p1.z)*(p3.y-p1.y) );
+    b = ( (p2.z-p1.z)*(p3.x-p1.x)-(p2.x-p1.x)*(p3.z-p1.z) );
+    c = ( (p2.x-p1.x)*(p3.y-p1.y)-(p2.y-p1.y)*(p3.x-p1.x) );
+    return Vec3(a, b, c);
+}
+
 int main()
 {
 	Lpoint a,b,c;
@@ -104,6 +156,6 @@ int main()
 	l.p=b;
 	l.dir.dx=c.x-b.x;
 	l.dir.dy=c.y-b.y;
-	cout<<pTol(a,l)<<endl;
+	cout<<dis_p2l(a,l)<<endl;
 	return 0;
 }
